@@ -19,9 +19,19 @@
   <main>
     <section>
     </section>
-    <section id="qr-code">
+    <section id="qr-code-1">
     </section>
     <section id="stats">
+    </section>
+    <section id="qr-code-2">
+    </section>
+    <section id="qr-code-3">
+    </section>
+    <section id="qr-code-4">
+    </section>
+    <section id="qr-code-5">
+    </section>
+    <section id="qr-code-6">
     </section>
   </main>
   <link rel="apple-touch-icon" href="pwa/icons/apple-touch-icon.png">
@@ -30,16 +40,15 @@
   <script>
     'use strict';
     let address = 'NQ95 I32O SA47 1KHL R1FV MP0O SVNI 73BS IJQ5',
-        element = document.querySelector('#qr-code'),
         time    = new Date(),
         stats   = document.querySelector('#stats');
 
-    class QrCode {
-      static render(config, $element) {
-        $element.appendChild(window.qrcode(config));
-      }
-    }
-
+//    class QrCode {
+//      static render(config, $element) {
+//        $element.appendChild(window.qrcode(config));
+//      }
+//    }
+//
     QrCode.render({
       text: address,
       radius: 0.5,
@@ -47,9 +56,55 @@
       fill: '#536DFE',
       background: 'transparent',
       size: Math.min(240, (window.innerWidth - 64) )
-    }, element);
+    }, document.querySelector('#qr-code-1'));
 
     stats.appendChild(document.createTextNode('Rendered in ' + (new Date()-time) + 'ms'));
+
+    QrCode.render({
+      text: address,
+      radius: 0.5,
+      ecLevel: 'H',
+      fill: '#ffffff',
+      background: '#536DFE',
+      size: 64
+    }, document.querySelector('#qr-code-2'));
+
+    QrCode.render({
+      text: address,
+      radius: 0.1,
+      ecLevel: 'H',
+      fill: '#536DFE',
+      background: 'transparent',
+      size: 64
+    }, document.querySelector('#qr-code-3'));
+
+    QrCode.render({
+      text: address,
+      radius: 0.5,
+      ecLevel: 'H',
+      fill: '#536DFE',
+      background: '#fede33',
+      size: 64
+    }, document.querySelector('#qr-code-4'));
+
+    QrCode.render({
+      text: address,
+      radius: 5,
+      ecLevel: 'H',
+      fill: '#536DFE',
+      background: 'transparent',
+      size: 64
+    }, document.querySelector('#qr-code-5'));
+
+    QrCode.render({
+      text: address,
+      radius: 0.5,
+      ecLevel: 'H',
+      fill: '#536DFE',
+      background: 'transparent',
+      size: 64
+    }, document.querySelector('#qr-code-6'));
+
   </script>
 </body>
 </html>
