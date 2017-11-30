@@ -1,3 +1,10 @@
+// Library interface
+class QrCode {
+  static render(config, $element) {
+    $element.appendChild(window.qrcode(config));
+  }
+}
+
 /*! jquery-qrcode v0.14.0 - https://larsjung.de/jquery-qrcode/ */
 (function(vendor_qrcode) {
     'use strict';
@@ -986,57 +993,20 @@
             };
 
             _this.getLengthInBits = function(mode, type) {
+                if (mode != QRMode.MODE_8BIT_BYTE)
+                    throw new Error('mode:' + mode);
 
                 if (1 <= type && type < 10) {
 
                     // 1 - 9
 
-                    switch (mode) {
-                        case QRMode.MODE_NUMBER:
-                            return 10;
-                        case QRMode.MODE_ALPHA_NUM:
-                            return 9;
-                        case QRMode.MODE_8BIT_BYTE:
-                            return 8;
-                        case QRMode.MODE_KANJI:
-                            return 8;
-                        default:
-                            throw new Error('mode:' + mode);
-                    }
-
-                } else if (type < 27) {
-
-                    // 10 - 26
-
-                    switch (mode) {
-                        case QRMode.MODE_NUMBER:
-                            return 12;
-                        case QRMode.MODE_ALPHA_NUM:
-                            return 11;
-                        case QRMode.MODE_8BIT_BYTE:
-                            return 16;
-                        case QRMode.MODE_KANJI:
-                            return 10;
-                        default:
-                            throw new Error('mode:' + mode);
-                    }
+                    return 8;
 
                 } else if (type < 41) {
 
-                    // 27 - 40
+                    // 10 - 40
 
-                    switch (mode) {
-                        case QRMode.MODE_NUMBER:
-                            return 14;
-                        case QRMode.MODE_ALPHA_NUM:
-                            return 13;
-                        case QRMode.MODE_8BIT_BYTE:
-                            return 16;
-                        case QRMode.MODE_KANJI:
-                            return 12;
-                        default:
-                            throw new Error('mode:' + mode);
-                    }
+                    return 16;
 
                 } else {
                     throw new Error('type:' + type);
