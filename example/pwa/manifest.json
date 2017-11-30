@@ -1,0 +1,26 @@
+{
+  "name": "Nimiq Wallet",
+  "theme_color": "#536DFE",
+  "background_color": "#536DFE",
+  "display": "standalone",
+  "orientation": "portrait",
+  "start_url": "/nano-client-ui/#home",
+  "icons": [
+    {
+      "src": "/nano-client-ui/pwa/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "/nano-client-ui/pwa/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/nano-client-ui/pwa/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "splash_pages": null
+}
