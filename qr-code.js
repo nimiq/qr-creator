@@ -1,19 +1,15 @@
+'use strict';
+let qrCodeGenerator = null;
+
 // Library interface
 class QrCode {
   static render(config, $element) {
-    $element.appendChild(window.qrcode(config));
+    $element.appendChild(qrCodeGenerator(config));
   }
 }
 
 /*! jquery-qrcode v0.14.0 - https://larsjung.de/jquery-qrcode/ */
 (function(vendor_qrcode) {
-    'use strict';
-
-    // Check if canvas is available in the browser (as Modernizr does)
-    var hasCanvas = (function() {
-        var elem = document.createElement('canvas');
-        return !!(elem.getContext && elem.getContext('2d'));
-    }());
 
     // Wrapper for the original QR code generator.
     function createQRCode(text, level, version, quiet) {
@@ -79,12 +75,6 @@ class QrCode {
         if (settings.background) {
             context.fillStyle = settings.background;
             context.fillRect(settings.left, settings.top, settings.size, settings.size);
-        }
-    }
-
-    function drawModuleDefault(qr, context, settings, left, top, width, row, col) {
-        if (qr.isDark(row, col)) {
-            context.rect(left, top, width, width);
         }
     }
 
@@ -181,15 +171,10 @@ class QrCode {
     }
 
     function drawModules(qr, context, settings) {
-        var moduleCount = qr.moduleCount;
-        var moduleSize = settings.size / moduleCount;
-        var fn = drawModuleDefault;
-        var row;
-        var col;
-
-        if (settings.radius > 0 && settings.radius <= 0.5) {
-            fn = drawModuleRounded;
-        }
+        var moduleCount = qr.moduleCount,
+            moduleSize = settings.size / moduleCount,
+            row,
+            col;
 
         context.beginPath();
         for (row = 0; row < moduleCount; row += 1) {
@@ -198,7 +183,7 @@ class QrCode {
                 var t = settings.top + row * moduleSize;
                 var w = moduleSize;
 
-                fn(qr, context, settings, l, t, w, row, col);
+                drawModuleRounded(qr, context, settings, l, t, w, row, col);
             }
         }
 
@@ -259,7 +244,7 @@ class QrCode {
         text: 'no text',
 
         // corner radius relative to module width: 0.0 .. 0.5
-        radius: 0,
+        radius: 0.5,
 
         // quiet zone in modules
         quiet: 0,
@@ -285,7 +270,7 @@ class QrCode {
 
     // // Register the plugin
     // // -------------------
-    window.qrcode = function(options) {
+    qrCodeGenerator = function(options) {
         var settings = {};
         Object.assign(settings, defaults, options);
         return createCanvas(settings);
@@ -698,26 +683,6 @@ class QrCode {
                 makeImpl(false, getBestMaskPattern());
             };
 
-            //_this.createImgTag = function(cellSize, margin) {
-
-            //    cellSize = cellSize || 2;
-            //    margin = (typeof margin == 'undefined') ? cellSize * 4 : margin;
-
-            //    var size = _this.getModuleCount() * cellSize + margin * 2;
-            //    var min = margin;
-            //    var max = size - margin;
-
-            //    return createImgTag(size, size, function(x, y) {
-            //        if (min <= x && x < max && min <= y && y < max) {
-            //            var c = Math.floor((x - min) / cellSize);
-            //            var r = Math.floor((y - min) / cellSize);
-            //            return _this.isDark(r, c) ? 0 : 1;
-            //        } else {
-            //            return 1;
-            //        }
-            //    });
-            //};
-
             return _this;
         };
 
@@ -725,14 +690,6 @@ class QrCode {
         // qrcode.stringToBytes
         //---------------------------------------------------------------------
 
-        //rcode.stringToBytes = function(s) {
-        //   var bytes = new Array();
-        //   for (var i = 0; i < s.length; i += 1) {
-        //       var c = s.charCodeAt(i);
-        //       bytes.push(c & 0xff);
-        //   }
-        //   return bytes;
-        //;
         // UTF-8 version
         qrcode.stringToBytes = function(s) {
             // http://stackoverflow.com/questions/18729405/how-to-convert-utf8-string-to-byte-array
@@ -769,84 +726,11 @@ class QrCode {
         };
 
         //---------------------------------------------------------------------
-        // qrcode.createStringToBytes
-        //---------------------------------------------------------------------
-
-        /**
-         * @param unicodeData base64 string of byte array.
-         * [16bit Unicode],[16bit Bytes], ...
-         * @param numChars
-         */
-        qrcode.createStringToBytes = function(unicodeData, numChars) {
-
-            // create conversion map.
-
-            var unicodeMap = function() {
-
-                var bin = base64DecodeInputStream(unicodeData);
-                var read = function() {
-                    var b = bin.read();
-                    if (b == -1) throw new Error();
-                    return b;
-                };
-
-                var count = 0;
-                var unicodeMap = {};
-                while (true) {
-                    var b0 = bin.read();
-                    if (b0 == -1) break;
-                    var b1 = read();
-                    var b2 = read();
-                    var b3 = read();
-                    var k = String.fromCharCode((b0 << 8) | b1);
-                    var v = (b2 << 8) | b3;
-                    unicodeMap[k] = v;
-                    count += 1;
-                }
-                if (count != numChars) {
-                    throw new Error(count + ' != ' + numChars);
-                }
-
-                return unicodeMap;
-            }();
-
-            var unknownChar = '?'.charCodeAt(0);
-
-            return function(s) {
-                var bytes = new Array();
-                for (var i = 0; i < s.length; i += 1) {
-                    var c = s.charCodeAt(i);
-                    if (c < 128) {
-                        bytes.push(c);
-                    } else {
-                        var b = unicodeMap[s.charAt(i)];
-                        if (typeof b == 'number') {
-                            if ((b & 0xff) == b) {
-                                // 1byte
-                                bytes.push(b);
-                            } else {
-                                // 2bytes
-                                bytes.push(b >>> 8);
-                                bytes.push(b & 0xff);
-                            }
-                        } else {
-                            bytes.push(unknownChar);
-                        }
-                    }
-                }
-                return bytes;
-            };
-        };
-
-        //---------------------------------------------------------------------
         // QRMode
         //---------------------------------------------------------------------
 
         var QRMode = {
-            MODE_NUMBER: 1 << 0,
-            MODE_ALPHA_NUM: 1 << 1,
             MODE_8BIT_BYTE: 1 << 2,
-            MODE_KANJI: 1 << 3
         };
 
         //---------------------------------------------------------------------
