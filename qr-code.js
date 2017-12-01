@@ -34,26 +34,26 @@ class QrCode {
             return vqr.isDark(row, col);
         }
 
-        function addBlank(l, t, r, b) {
-            var prevIsDark = qr.isDark;
-            var moduleSize = 1 / quietModuleCount;
-
-            qr.isDark = function(row, col) {
-                var ml = col * moduleSize;
-                var mt = row * moduleSize;
-                var mr = ml + moduleSize;
-                var mb = mt + moduleSize;
-
-                return prevIsDark(row, col) && (l > mr || ml > r || t > mb || mt > b);
-            };
-        }
+//        function addBlank(l, t, r, b) {
+//            var prevIsDark = qr.isDark;
+//            var moduleSize = 1 / quietModuleCount;
+//
+//            qr.isDark = function(row, col) {
+//                var ml = col * moduleSize;
+//                var mt = row * moduleSize;
+//                var mr = ml + moduleSize;
+//                var mb = mt + moduleSize;
+//
+//                return prevIsDark(row, col) && (l > mr || ml > r || t > mb || mt > b);
+//            };
+//        }
 
         qr.text = text;
         qr.level = level;
         qr.version = version;
         qr.moduleCount = quietModuleCount;
         qr.isDark = isDark;
-        qr.addBlank = addBlank;
+//        qr.addBlank = addBlank;
 
         return qr;
     }
@@ -78,6 +78,7 @@ class QrCode {
         }
     }
 
+    // used when center is filled
     function drawModuleRoundedDark(ctx, l, t, r, b, rad, nw, ne, se, sw) {
         if (nw) {
             ctx.moveTo(l + rad, t);
@@ -114,6 +115,7 @@ class QrCode {
         }
     }
 
+    // used when center is empty
     function drawModuleRoundendLight(ctx, l, t, r, b, rad, nw, ne, se, sw) {
         if (nw) {
             ctx.moveTo(l + rad, t);
@@ -237,7 +239,7 @@ class QrCode {
         // code color or image element
         fill: '#000',
 
-        // background color or image element, `null` for transparent background
+        // background color, `null` for transparent background
         background: null,
 
         // content
@@ -249,23 +251,6 @@ class QrCode {
         // quiet zone in modules
         quiet: 0,
 
-        // modes
-        // 0: normal
-        // 1: label strip
-        // 2: label box
-        // 3: image strip
-        // 4: image box
-        mode: 0,
-
-        mSize: 0.1,
-        mPosX: 0.5,
-        mPosY: 0.5,
-
-        label: 'no label',
-        fontname: 'sans',
-        fontcolor: '#000',
-
-        image: null
     };
 
     // // Register the plugin
@@ -428,12 +413,7 @@ class QrCode {
 
                             for (var c = -2; c <= 2; c += 1) {
 
-                                if (r == -2 || r == 2 || c == -2 || c == 2 ||
-                                    (r == 0 && c == 0)) {
-                                    _modules[row + r][col + c] = true;
-                                } else {
-                                    _modules[row + r][col + c] = false;
-                                }
+                                _modules[row + r][col + c] = r == -2 || r == 2 || c == -2 || c == 2 || (r == 0 && c == 0);
                             }
                         }
                     }
@@ -460,32 +440,12 @@ class QrCode {
                 var data = (_errorCorrectLevel << 3) | maskPattern;
                 var bits = QRUtil.getBCHTypeInfo(data);
 
-                // vertical
                 for (var i = 0; i < 15; i += 1) {
+                    let mod = (!test && ((bits >> i) & 1) == 1);
 
-                    var mod = (!test && ((bits >> i) & 1) == 1);
-
-                    if (i < 6) {
-                        _modules[i][8] = mod;
-                    } else if (i < 8) {
-                        _modules[i + 1][8] = mod;
-                    } else {
-                        _modules[_moduleCount - 15 + i][8] = mod;
-                    }
-                }
-
-                // horizontal
-                for (var i = 0; i < 15; i += 1) {
-
-                    var mod = (!test && ((bits >> i) & 1) == 1);
-
-                    if (i < 8) {
-                        _modules[8][_moduleCount - i - 1] = mod;
-                    } else if (i < 9) {
-                        _modules[8][15 - i - 1 + 1] = mod;
-                    } else {
-                        _modules[8][15 - i - 1] = mod;
-                    }
+                    // vertical then horizontal
+                    _modules[i < 6 ? i : (i < 8 ? i + 1 : _moduleCount - 15 + i)][8] = mod;
+                    _modules[8][i < 8 ? _moduleCount - i - 1 : (i < 9 ? 15 - i : 14 - i)] = mod;
                 }
 
                 // fixed module
@@ -1130,6 +1090,7 @@ class QrCode {
 
         var QRRSBlock = function() {
 
+            // TODO is it possible to generate this block with JS in let kB?
             var RS_BLOCK_TABLE = [
 
                 // L
