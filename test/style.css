@@ -1,0 +1,12 @@
+section {
+  position: relative;
+}
+section canvas {
+  position: absolute;
+}
+
+section canvas:nth-child(1) {
+  position: absolute;
+  left: 2px;
+  top: 2px;
+}

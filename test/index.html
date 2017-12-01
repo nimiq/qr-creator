@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>QR-Code generator test</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+</head>
+
+<body class="state-loading">
+  <header>
+    <h1>QR-Code generator test</h1>
+  </header>
+  <main>
+    <section>
+      Both QR Codes must be the same. So, if it looks like the QR Code has a shadow it's good!
+    </section>
+    <section id="qr-code">
+    </section>
+  </main>
+  <link rel="apple-touch-icon" href="pwa/icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="style.css">
+  <script src="../qr-code.js"></script>
+  <script src="qr-code.org.js"></script>
+  <script>
+    'use strict';
+    let address = 'NQ95 I32O SA47 1KHL R1FV MP0O SVNI 73BS IJQ5',
+        time    = new Date(),
+        stats   = document.querySelector('#stats');
+
+    test({
+      text: address,
+      radius: 0.5,
+      ecLevel: 'H',
+      fill: '#536DFE',
+      background: null,
+      size: Math.min(240, (window.innerWidth - 64) )
+    }, '#qr-code');
+
+    function test(config, selector) {
+      let testReference = Object.assign({}, config, { fill: '#996633' })
+      QrCodeOrg.render(testReference, document.querySelector(selector));
+      QrCode.render(config, document.querySelector(selector));
+    }
+  </script>
+</body>
+</html>
