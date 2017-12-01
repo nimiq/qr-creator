@@ -38,7 +38,7 @@
   </main>
   <link rel="apple-touch-icon" href="pwa/icons/apple-touch-icon.png">
   <link rel="stylesheet" href="style.css">
-  <script src="../qr-code.js"></script>
+  <script src="../dist/qr-code.min.js"></script>
   <script>
     'use strict';
     let address = 'NQ95 I32O SA47 1KHL R1FV MP0O SVNI 73BS IJQ5',
@@ -82,15 +82,6 @@
       background: '#fede33',
       size: 128
     }, document.querySelector('#qr-code-4'));
-
-    QrCode.render({
-      text: address,
-      radius: 5,
-      ecLevel: 'L',
-      fill: '#536DFE',
-      background: 'transparent',
-      size: 128
-    }, document.querySelector('#qr-code-5'));
 
     QrCode.render({
       text: address,
