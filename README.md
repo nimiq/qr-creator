@@ -37,17 +37,19 @@ The goal of the library is to generate QR Codes only. For that reason we have re
 
 The resulting library is not using any global variables, is all strict mode, and relies on modern browser standards.
 
+Here is a list of things we removed.
+Feature | lines removed
+:--- | ---:
 Browser compatibility testing | 4 lines
 Dead code | 12 lines
-Removed additional functionality |
+General code refactoring | ~30 lines
 Rendering labels | 45 lines
 Fill with image | 55 lines
-Draw rect QR Code | 8 lines
-Create div, img, table tags | 121 lines
-code refactoring | ~30 lines
-focus on UTF-8 only | 82 lines
+Draw non-rounded corner QR Code | 8 lines
+Create div, img, and table tags | 121 lines
+Focus on UTF-8 only | 82 lines
 Removed unused modes, kept 8bit | ~30 lines
-GIT image (w/t base64 streams | 385 lines
+GIF image (with base64 streams) | 385 lines
 
 Use Google's Closure compiler:
 Original:
@@ -61,6 +63,7 @@ Compiled Size: 4.75KB gzipped (12.06KB uncompressed)
 Saved 48.22% off the gzipped size (75.76% without gzip)
 
 compare | Original | New
+:--- | ---: | ---:
 Lines of code | 2332 | 1556
 Size | 64kB | 50kB
 Minified | 20.6kB | 12.3kB
