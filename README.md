@@ -39,7 +39,7 @@ The resulting library is not using any global variables, is all strict mode, and
 
 Here is a list of things we removed.
 
-Feature | Code removed
+Feature / aspect | Code removed
 :--- | ---:
 Browser compatibility testing | 4 lines
 Dead code | 12 lines
@@ -52,20 +52,22 @@ Focus on UTF-8 only | 82 lines
 Removed unused modes, kept 8bit | ~30 lines
 GIF image (with base64 streams) | 385 lines
 
-Use Google's Closure compiler:
-Original:
+### Compression
+Using  Google's Closure compiler:
+
+Original library:
 Original Size: 12.75KB gzipped (64.01KB uncompressed)
-Compiled Size: 7.32KB   gzipped (19.06KB uncompressed)
+Compiled Size: 7.32KB gzipped (19.06KB uncompressed)
 Saved 42.62% off the gzipped size (70.23% without gzip)
 
-New:
+Trimmed down new version:
 Original Size: 9.18KB gzipped (49.74KB uncompressed)
 Compiled Size: 4.75KB gzipped (12.06KB uncompressed)
 Saved 48.22% off the gzipped size (75.76% without gzip)
 
 compare | Original | New
 :--- | ---: | ---:
-Lines of code | 2332 | 1556
-Size | 64kB | 50kB
-Minified | 20.6kB | 12.3kB
-Gzipped 7.3kB | 4.75kB
+Lines of code | 2332 | 1556 (-33%)
+Size | 64kB | 50kB (-22%)
+Minified | 20.6kB | 12.3kB (-40%)
+Gzipped | 7.3kB | 4.75kB (-35%)
