@@ -34,20 +34,6 @@ class QrCode {
             return vqr.isDark(row, col);
         }
 
-//        function addBlank(l, t, r, b) {
-//            var prevIsDark = qr.isDark;
-//            var moduleSize = 1 / quietModuleCount;
-//
-//            qr.isDark = function(row, col) {
-//                var ml = col * moduleSize;
-//                var mt = row * moduleSize;
-//                var mr = ml + moduleSize;
-//                var mb = mt + moduleSize;
-//
-//                return prevIsDark(row, col) && (l > mr || ml > r || t > mb || mt > b);
-//            };
-//        }
-
         qr.text = text;
         qr.level = level;
         qr.version = version;
@@ -66,7 +52,7 @@ class QrCode {
         for (var version = minVersion; version <= maxVersion; version += 1) {
             try {
                 return createQRCode(text, level, version, quiet);
-            } catch (err) { /* empty */ }
+            } catch (err) { }
         }
         return undefined;
     }
@@ -420,6 +406,7 @@ class QrCode {
                 }
             };
 
+            // TODO rm5 can be removed if we fix type to 5 (this method is called at 7 only)
             var setupTypeNumber = function(test) {
 
                 var bits = QRUtil.getBCHTypeNumber(_typeNumber);
@@ -790,6 +777,7 @@ class QrCode {
                 return ((data << 10) | d) ^ G15_MASK;
             };
 
+            // TODO rm5 (see rm5 above)
             _this.getBCHTypeNumber = function(data) {
                 var d = data << 12;
                 while (getBCHDigit(d) - getBCHDigit(G18) >= 0) {
@@ -837,24 +825,10 @@ class QrCode {
             };
 
             _this.getLengthInBits = function(mode, type) {
-                if (mode != QRMode.MODE_8BIT_BYTE)
-                    throw new Error('mode:' + mode);
+                if (mode != QRMode.MODE_8BIT_BYTE || type < 1 || type > 40)
+                    throw new Error('mode: ' + mode + '; type: ' + type);
 
-                if (1 <= type && type < 10) {
-
-                    // 1 - 9
-
-                    return 8;
-
-                } else if (type < 41) {
-
-                    // 10 - 40
-
-                    return 16;
-
-                } else {
-                    throw new Error('type:' + type);
-                }
+                return type < 10 ? 8 : 16;
             };
 
             _this.getLostPoint = function(qrcode) {
@@ -1088,6 +1062,68 @@ class QrCode {
         // QRRSBlock
         //---------------------------------------------------------------------
 
+//        var generateBlockTable = window.genBlock = function() {
+//            var result = [];
+//            function makeH(level){
+//                // 1-10
+//                var a = [
+//                [ 1, 26,  9            ],
+//                [ 1, 44, 16            ],
+//                [ 2, 35, 13            ],
+//                [ 4, 25,  9            ],
+//                [ 2, 33, 11,  2, 34, 12],
+//                [ 4, 43, 15            ],
+//                [ 4, 39, 13,  1, 40, 14],
+//                [ 4, 40, 14,  2, 41, 15],
+//                [ 4, 36, 12,  4, 37, 13],
+//                [ 6, 43, 15,  2, 44, 16],
+//
+//                // 11-20
+//                [ 3, 36, 12,  8, 37, 13],
+//                [ 7, 42, 14,  4, 43, 15],
+//                [12, 33, 11,  4, 34, 12],
+//                [11, 36, 12,  5, 37, 13],
+//                [11, 36, 12,  7, 37, 13],
+//                [ 3, 45, 15, 13, 46, 16],
+//                [ 2, 42, 14, 17, 43, 15],
+//                [ 2, 42, 14, 19, 43, 15],
+//                [ 9, 39, 13, 16, 40, 14],
+//                [15, 43, 15, 10, 44, 16],
+//
+//                // 21-30
+//                [19, 46, 16,  6, 47, 17],
+//                [34, 37, 13            ],
+//                [16, 45, 15, 14, 46, 16],
+//                [30, 46, 16,  2, 47, 17],
+//                [22, 45, 15, 13, 46, 16],
+//                [33, 46, 16,  4, 47, 17],
+//                [12, 45, 15, 28, 46, 16],
+//                [11, 45, 15, 31, 46, 16],
+//                [19, 45, 15, 26, 46, 16],
+//                [23, 45, 15, 25, 46, 16],
+//
+//                // 31-40
+//                [23, 45, 15, 28, 46, 16],
+//                [19, 45, 15, 35, 46, 16],
+//                [11, 45, 15, 46, 46, 16],
+//                [59, 46, 16,  1, 47, 17],
+//                [22, 45, 15, 41, 46, 16],
+//                [ 2, 45, 15, 64, 46, 16],
+//                [24, 45, 15, 46, 46, 16],
+//                [42, 45, 15, 32, 46, 16],
+//                [10, 45, 15, 67, 46, 16],
+//                [20, 45, 15, 61, 46, 16]];
+//                return a[level];
+//            }
+//            for (let level = 0; level < 40; level++) {
+//                // L
+//                // M
+//                // Q
+//                // H
+//                result.push(makeH(level));
+//            }
+//            return result;
+//        }
         var QRRSBlock = function() {
 
             // TODO is it possible to generate this block with JS in let kB?
@@ -1339,6 +1375,9 @@ class QrCode {
                 [20, 45, 15, 61, 46, 16]
             ];
 
+//            window.rsBlockTable = RS_BLOCK_TABLE;
+//            window.rsBlockTableNew = generateBlockTable();
+
             var qrRSBlock = function(totalCount, dataCount) {
                 var _this = {};
                 _this.totalCount = totalCount;
@@ -1473,16 +1512,6 @@ class QrCode {
         // returns qrcode function.
         return qrcode;
     }();
-
-    (function(factory) {
-        if (typeof define === 'function' && define.amd) {
-            define([], factory);
-        } else if (typeof exports === 'object') {
-            module.exports = factory();
-        }
-    }(function() {
-        return qrcode;
-    }));
 
     return qrcode; // eslint-disable-line no-undef
 }()));
