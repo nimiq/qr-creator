@@ -38,7 +38,8 @@ The goal of the library is to generate QR Codes only. For that reason we have re
 The resulting library is not using any global variables, is all strict mode, and relies on modern browser standards.
 
 Here is a list of things we removed.
-Feature | lines removed
+
+Feature | Code removed
 :--- | ---:
 Browser compatibility testing | 4 lines
 Dead code | 12 lines
