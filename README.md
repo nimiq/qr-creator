@@ -1,4 +1,4 @@
-# Low-weight beautiful QR Code lib
+# Low-weight lib for beautiful QR Codes
 This library is a trimmed down version of (https://larsjung.de/jquery-qrcode/ Lars Jung's jQuery.qrcode library) which generates beautiful QR Codes. Lars Jung's library makes use of (https://github.com/kazuhikoarase/qrcode-generator QR Code Generator). All parts are licensed under the MIT License.
 
 ## API
