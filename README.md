@@ -1,6 +1,6 @@
 <img align="right" src="demo/qr-code-example.png"/>
 
-# Low-weight lib for beautiful QR codes
+# Lightweight library for beautiful QR codes
 A little library generating beautiful QR codes in only 12.3kB minified and 4.75kB gzipped licensed under the MIT License.
 Try out the [demo](demo/)!
 
