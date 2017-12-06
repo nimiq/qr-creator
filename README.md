@@ -1,8 +1,10 @@
 # Low-weight lib for beautiful QR codes
-This library is a trimmed down version of (https://larsjung.de/jquery-qrcode/ Lars Jung's jQuery.qrcode library) which generates beautiful QR codes. Lars Jung's library makes use of (https://github.com/kazuhikoarase/qrcode-generator QR code Generator). All parts are licensed under the MIT License.
+<img align="left" src="demo/qr-code-example.png"/>
+A little library generating beautiful QR codes in only 12.3kB minified and 4.75kB gzipped licensed under the MIT License.
+Try out the (demo/ demo)!
 
-## API
-Example:
+## Usage
+Call the QrCode API requires a configuration object and a DOM element to render the QR code into:
 ```javascript
   QrCode.render({
     text: "some text",
@@ -14,58 +16,22 @@ Example:
   }, document.querySelector('#qr-code'));
 ```
 
-### Text
-Any kind of text, also links, email addresses, any thing. The library will figure out the size of the QR code to fit all the text inside.
+Attribute | Options | Default | Description
+----------|---------|---------|------------
+text | String | "" | Any kind of text, also links, email addresses, any thing. The library will figure out the size of the QR code to fit all the text inside.
+radius | 0 .. 0.5 | 0.5 | Defines how round the blocks should be. Numbers from 0 (squares) to 0.5 (maximum round) are supported.
+ecLevel | L, M, Q, H | L | Means "Error correction levels". Four values are supported: L, M, Q, and H  and each will use %7, 15%, 25%, and 30% of the QR code for error correction respectively. So on one hand the code will get bigger but chances are also higher that it will be read without errors later on.
+fill | color code | #000000 | What color you want your QR code to be. Should be a HEX code starting with #.
+background | color code | null | The background color (again in HEX code starting with #) or null for transparent background.
+size | int | 200 | The total size of the final QR code in pixels - it will be a square.
 
-### Radius
-Defines how round the blocks should be. Numbers from 0 (squares) to 0.5 (maximum round) are supported.
-
-### EcLevel
-Means "Error correction levels". Four values are supported: L, M, Q, and H  and each will use %7, 15%, 25%, and 30% of the QR code for error correction respectively. So on one hand the code will get bigger but chances are also higher that it will be read without errors later on.
-
-### Fill
-What color you want your QR code to be. Should be a HEX code starting with #.
-
-### Background
-The background color (again in HEX code starting with #) or null for transparent background.
-
-### Size
-The total size of the final QR code in pixels - it will be a square.
+## Origin
+This library is a trimmed down version of (https://larsjung.de/jquery-qrcode/ Lars Jung's jQuery.qrcode library). Lars Jung's library makes use of this (https://github.com/kazuhikoarase/qrcode-generator QR code Generator). All parts are licensed under the MIT License.
 
 ## Trimmed down to be low weight
-The goal of the library is to generate QR codes only. For that reason we have removed all additional code such as GIF image generation, background image support, rendering a label on top, removed some dead code, and freed it from depending on jQuery.
+The goal of the library is to generate QR codes only. For that reason we have removed all additional code such as GIF image generation, background image support, rendering a label on top, removed some dead code, and freed it from depending on jQuery.  Also, the resulting library does not using any global variables, is all strict mode, and relies on modern browser standards.
 
-The resulting library is not using any global variables, is all strict mode, and relies on modern browser standards.
-
-Here is a list of things we removed.
-
-Feature / aspect | Code removed
-:--- | ---:
-Browser compatibility testing | 4 lines
-Dead code | 12 lines
-General code refactoring | ~30 lines
-Rendering labels | 45 lines
-Fill with image | 55 lines
-Draw non-rounded corner QR code | 8 lines
-Create div, img, and table tags | 121 lines
-Focus on UTF-8 only | 82 lines
-Removed unused modes, kept 8bit | ~30 lines
-GIF image (with base64 streams) | 385 lines
-
-### Compression
-Using  Google's Closure compiler:
-
-Original library:
-Original Size: 12.75KB gzipped (64.01KB uncompressed)
-Compiled Size: 7.32KB gzipped (19.06KB uncompressed)
-Saved 42.62% off the gzipped size (70.23% without gzip)
-
-Trimmed down new version:
-Original Size: 9.18KB gzipped (49.74KB uncompressed)
-Compiled Size: 4.75KB gzipped (12.06KB uncompressed)
-Saved 48.22% off the gzipped size (75.76% without gzip)
-
-compare | Original | New
+The result | Original | New
 :--- | ---: | ---:
 Lines of code | 2332 | 1556 (-33%)
 Size | 64kB | 50kB (-22%)
