@@ -7,15 +7,22 @@ html {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
-label {
-  display: block;
+
+body {
+  max-width: 720px;
+  margin: 0 auto;
 }
 
 section {
   margin: 1.333rem 0;
 }
 
+#tools {
+  margin-top: 4rem;
+}
+
 label {
+  display: block;
   margin: .666rem 0;
 }
 
