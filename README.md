@@ -1,10 +1,10 @@
 # Low-weight lib for beautiful QR codes
 <img align="left" src="demo/qr-code-example.png"/>
 A little library generating beautiful QR codes in only 12.3kB minified and 4.75kB gzipped licensed under the MIT License.
-Try out the (demo/ demo)!
+Try out the [demo](demo/)!
 
 ## Usage
-Call the QrCode API requires a configuration object and a DOM element to render the QR code into:
+Call the QrCode API with a configuration object and a DOM element to render the QR code into:
 ```javascript
   QrCode.render({
     text: "some text",
@@ -20,16 +20,16 @@ Attribute | Options | Default | Description
 ----------|---------|---------|------------
 text | String | "" | Any kind of text, also links, email addresses, any thing. The library will figure out the size of the QR code to fit all the text inside.
 radius | 0 .. 0.5 | 0.5 | Defines how round the blocks should be. Numbers from 0 (squares) to 0.5 (maximum round) are supported.
-ecLevel | L, M, Q, H | L | Means "Error correction levels". Four values are supported: L, M, Q, and H  and each will use %7, 15%, 25%, and 30% of the QR code for error correction respectively. So on one hand the code will get bigger but chances are also higher that it will be read without errors later on.
-fill | color code | #000000 | What color you want your QR code to be. Should be a HEX code starting with #.
-background | color code | null | The background color (again in HEX code starting with #) or null for transparent background.
+ecLevel | L, M, Q, H | L | Means "Error correction levels". The four values L, M, Q, and H will use %7, 15%, 25%, and 30% of the QR code for error correction respectively. So on one hand the code will get bigger but chances are also higher that it will be read without errors later on.
+fill | color code | #000000 | What color you want your QR code to be. Use the demo to try different colors.
+background | color code | null | The background color or null for transparent background.
 size | int | 200 | The total size of the final QR code in pixels - it will be a square.
 
 ## Origin
-This library is a trimmed down version of (https://larsjung.de/jquery-qrcode/ Lars Jung's jQuery.qrcode library). Lars Jung's library makes use of this (https://github.com/kazuhikoarase/qrcode-generator QR code Generator). All parts are licensed under the MIT License.
+This library is a trimmed down version of [Lars Jung's jQuery.qrcode library](https://larsjung.de/jquery-qrcode/). Lars Jung's library makes use of this [QR code Generator](https://github.com/kazuhikoarase/qrcode-generator). All parts are licensed under the MIT License.
 
 ## Trimmed down to be low weight
-The goal of the library is to generate QR codes only. For that reason we have removed all additional code such as GIF image generation, background image support, rendering a label on top, removed some dead code, and freed it from depending on jQuery.  Also, the resulting library does not using any global variables, is all strict mode, and relies on modern browser standards.
+The goal of the library is to generate QR codes only. For that reason we have removed all additional code such as GIF image generation, background image support, rendering a label on top, removed some dead code, and freed it from depending on jQuery. Also, the resulting library does not use any global variables, is all strict mode, and relies on modern browser standards instead.
 
 The result | Original | New
 :--- | ---: | ---:
