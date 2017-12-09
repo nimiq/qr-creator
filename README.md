@@ -1,8 +1,8 @@
 <img align="right" src="demo/qr-code-example.png"/>
 
-# Lightweight library for beautiful QR codes
-A little library generating beautiful QR codes in only 12.3kB minified and 4.75kB gzipped licensed under the MIT License.
-Try out the [demo](https://nimiq.github.io/qr-code/demo)!
+# Lightweight library for stylish QR codes
+A little library generating stylish QR codes in only 12.3kB minified and 4.75kB gzipped licensed under the MIT License.
+Try out the [demo](https://nimiq.github.io/qr-encoder/demo)!
 
 ## Usage
 Call the QrCode API with a configuration object and a DOM element to render the QR code into:
