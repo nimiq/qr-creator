@@ -1,12 +1,13 @@
-# Low-weight lib for beautiful QR codes
-<img align="left" src="demo/qr-code-example.png"/>
-A little library generating beautiful QR codes in only 12.3kB minified and 4.75kB gzipped licensed under the MIT License.
-Try out the [demo](demo/)!
+<img align="right" src="demo/qr-code-example.png"/>
+
+# Lightweight library for stylish QR codes
+A little library generating stylish QR codes in only 12.2kB minified (4.75kB gzipped).
+Try out the [demo](https://nimiq.github.io/qr-encoder/demo)!
 
 ## Usage
 Call the QrCode API with a configuration object and a DOM element to render the QR code into:
 ```javascript
-  QrCode.render({
+  QrEncoder.render({
     text: "some text",
     radius: 0.5, // 0.0 to 0.5
     ecLevel: 'H', // L, M, Q, H
@@ -35,5 +36,5 @@ The result | Original | New
 :--- | ---: | ---:
 Lines of code | 2332 | 1556 (-33%)
 Size | 64kB | 50kB (-22%)
-Minified | 20.6kB | 12.3kB (-40%)
-Gzipped | 7.3kB | 4.75kB (-35%)
+Minified | 20.6kB | 11.95kB (-40%)
+Gzipped | 7.3kB | 4.77kB (-35%)
