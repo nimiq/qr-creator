@@ -21,8 +21,8 @@ class QrCode {
 
         quiet = quiet || 0;
 
-        var qrModuleCount = vqr.getModuleCount();
-        var quietModuleCount = vqr.getModuleCount() + 2 * quiet;
+        var qrModuleCount = vqr.getModuleCount(),
+            quietModuleCount = vqr.getModuleCount() + 2 * quiet;
 
         function isDark(row, col) {
             row -= quiet;
@@ -66,90 +66,61 @@ class QrCode {
 
     // used when center is filled
     function drawModuleRoundedDark(ctx, l, t, r, b, rad, nw, ne, se, sw) {
+        //let moveTo = (x, y) => ctx.moveTo(Math.floor(x), Math.floor(y));
         if (nw) {
             ctx.moveTo(l + rad, t);
         } else {
             ctx.moveTo(l, t);
         }
 
-        if (ne) {
-            ctx.lineTo(r - rad, t);
-            ctx.arcTo(r, t, r, b, rad);
-        } else {
-            ctx.lineTo(r, t);
+        function lal(b, x0, y0, x1, y1, r0, r1) {
+            if (b) {
+                ctx.lineTo(x0 + r0, y0 + r1);
+                ctx.arcTo(x0, y0, x1, y1, rad);
+            } else {
+                ctx.lineTo(x0, y0);
+            }
         }
 
-        if (se) {
-            ctx.lineTo(r, b - rad);
-            ctx.arcTo(r, b, l, b, rad);
-        } else {
-            ctx.lineTo(r, b);
-        }
-
-        if (sw) {
-            ctx.lineTo(l + rad, b);
-            ctx.arcTo(l, b, l, t, rad);
-        } else {
-            ctx.lineTo(l, b);
-        }
-
-        if (nw) {
-            ctx.lineTo(l, t + rad);
-            ctx.arcTo(l, t, r, t, rad);
-        } else {
-            ctx.lineTo(l, t);
-        }
+        lal(ne, r, t, r, b, -rad, 0);
+        lal(se, r, b, l, b, 0, -rad);
+        lal(sw, l, b, l, t, rad, 0);
+        lal(nw, l, t, r, t, 0, rad);
     }
 
     // used when center is empty
     function drawModuleRoundendLight(ctx, l, t, r, b, rad, nw, ne, se, sw) {
-        if (nw) {
-            ctx.moveTo(l + rad, t);
-            ctx.lineTo(l, t);
-            ctx.lineTo(l, t + rad);
-            ctx.arcTo(l, t, l + rad, t, rad);
+        function mlla(x, y, r0, r1) {
+            ctx.moveTo(x+r0, y);
+            ctx.lineTo(x, y);
+            ctx.lineTo(x, y+r1);
+            ctx.arcTo(x, y, x+r0, y, rad);
         }
 
-        if (ne) {
-            ctx.moveTo(r - rad, t);
-            ctx.lineTo(r, t);
-            ctx.lineTo(r, t + rad);
-            ctx.arcTo(r, t, r - rad, t, rad);
-        }
-
-        if (se) {
-            ctx.moveTo(r - rad, b);
-            ctx.lineTo(r, b);
-            ctx.lineTo(r, b - rad);
-            ctx.arcTo(r, b, r - rad, b, rad);
-        }
-
-        if (sw) {
-            ctx.moveTo(l + rad, b);
-            ctx.lineTo(l, b);
-            ctx.lineTo(l, b - rad);
-            ctx.arcTo(l, b, l + rad, b, rad);
-        }
+        if (nw) mlla(l, t, rad, rad);
+        if (ne) mlla(r, t, -rad, rad);
+        if (se) mlla(r, b, -rad, -rad);
+        if (sw) mlla(l, b, rad, -rad);
     }
 
     function drawModuleRounded(qr, context, settings, left, top, width, row, col) {
-        var isDark = qr.isDark;
-        var right = left + width;
-        var bottom = top + width;
-        var radius = settings.radius * width;
-        var rowT = row - 1;
-        var rowB = row + 1;
-        var colL = col - 1;
-        var colR = col + 1;
-        var center = isDark(row, col);
-        var northwest = isDark(rowT, colL);
-        var north = isDark(rowT, col);
-        var northeast = isDark(rowT, colR);
-        var east = isDark(row, colR);
-        var southeast = isDark(rowB, colR);
-        var south = isDark(rowB, col);
-        var southwest = isDark(rowB, colL);
-        var west = isDark(row, colL);
+        var isDark = qr.isDark,
+            right = left + width,
+            bottom = top + width,
+            rowT = row - 1,
+            rowB = row + 1,
+            colL = col - 1,
+            colR = col + 1,
+            radius = Math.floor(Math.max(0.5, settings.radius) * width),
+            center = isDark(row, col),
+            northwest = isDark(rowT, colL),
+            north = isDark(rowT, col),
+            northeast = isDark(rowT, colR),
+            east = isDark(row, colR),
+            southeast = isDark(rowB, colR),
+            south = isDark(rowB, col),
+            southwest = isDark(rowB, colL),
+            west = isDark(row, colL);
 
         if (center) {
             drawModuleRoundedDark(context, left, top, right, bottom, radius, !north && !west, !north && !east, !south && !east, !south && !west);
@@ -167,9 +138,9 @@ class QrCode {
         context.beginPath();
         for (row = 0; row < moduleCount; row += 1) {
             for (col = 0; col < moduleCount; col += 1) {
-                var l = settings.left + col * moduleSize;
-                var t = settings.top + row * moduleSize;
-                var w = moduleSize;
+                var l = settings.left + col * moduleSize,
+                    t = settings.top + row * moduleSize,
+                    w = moduleSize;
 
                 drawModuleRounded(qr, context, settings, l, t, w, row, col);
             }
@@ -278,19 +249,16 @@ class QrCode {
          */
         var qrcode = function(typeNumber, errorCorrectLevel) {
 
-            var PAD0 = 0xEC;
-            var PAD1 = 0x11;
-
-            var _typeNumber = typeNumber;
-            var _errorCorrectLevel = QRErrorCorrectLevel[errorCorrectLevel];
-            var _modules = null;
-            var _moduleCount = 0;
-            var _dataCache = null;
-            var _dataList = new Array();
-
-            var _this = {};
-
-            var makeImpl = function(test, maskPattern) {
+            var PAD0 = 0xEC,
+                PAD1 = 0x11,
+                _typeNumber = typeNumber,
+                _errorCorrectLevel = QRErrorCorrectLevel[errorCorrectLevel],
+                _modules = null,
+                _moduleCount = 0,
+                _dataCache = null,
+                _dataList = new Array(),
+                _this = {},
+                makeImpl = function(test, maskPattern) {
 
                 _moduleCount = _typeNumber * 4 + 17;
                 _modules = function(moduleCount) {
@@ -320,9 +288,9 @@ class QrCode {
                 }
 
                 mapData(_dataCache, maskPattern);
-            };
+            },
 
-            var setupPositionProbePattern = function(row, col) {
+                setupPositionProbePattern = function(row, col) {
 
                 for (var r = -1; r <= 7; r += 1) {
 
@@ -341,12 +309,12 @@ class QrCode {
                         }
                     }
                 }
-            };
+            },
 
-            var getBestMaskPattern = function() {
+                getBestMaskPattern = function() {
 
-                var minLostPoint = 0;
-                var pattern = 0;
+                var minLostPoint = 0,
+                    pattern = 0;
 
                 for (var i = 0; i < 8; i += 1) {
 
@@ -361,9 +329,9 @@ class QrCode {
                 }
 
                 return pattern;
-            };
+            },
 
-            var setupTimingPattern = function() {
+                setupTimingPattern = function() {
 
                 for (var r = 8; r < _moduleCount - 8; r += 1) {
                     if (_modules[r][6] != null) {
@@ -378,9 +346,9 @@ class QrCode {
                     }
                     _modules[6][c] = (c % 2 == 0);
                 }
-            };
+            },
 
-            var setupPositionAdjustPattern = function() {
+                setupPositionAdjustPattern = function() {
 
                 var pos = QRUtil.getPatternPosition(_typeNumber);
 
@@ -404,10 +372,10 @@ class QrCode {
                         }
                     }
                 }
-            };
+            },
 
             // TODO rm5 can be removed if we fix type to 5 (this method is called at 7 only)
-            var setupTypeNumber = function(test) {
+                setupTypeNumber = function(test) {
 
                 var bits = QRUtil.getBCHTypeNumber(_typeNumber);
 
@@ -420,9 +388,9 @@ class QrCode {
                     var mod = (!test && ((bits >> i) & 1) == 1);
                     _modules[i % 3 + _moduleCount - 8 - 3][Math.floor(i / 3)] = mod;
                 }
-            };
+            },
 
-            var setupTypeInfo = function(test, maskPattern) {
+                setupTypeInfo = function(test, maskPattern) {
 
                 var data = (_errorCorrectLevel << 3) | maskPattern;
                 var bits = QRUtil.getBCHTypeInfo(data);
@@ -437,15 +405,15 @@ class QrCode {
 
                 // fixed module
                 _modules[_moduleCount - 8][8] = (!test);
-            };
+            },
 
-            var mapData = function(data, maskPattern) {
+                mapData = function(data, maskPattern) {
 
-                var inc = -1;
-                var row = _moduleCount - 1;
-                var bitIndex = 7;
-                var byteIndex = 0;
-                var maskFunc = QRUtil.getMaskFunction(maskPattern);
+                var inc = -1,
+                    row = _moduleCount - 1,
+                    bitIndex = 7,
+                    byteIndex = 0,
+                    maskFunc = QRUtil.getMaskFunction(maskPattern);
 
                 for (var col = _moduleCount - 1; col > 0; col -= 2) {
 
@@ -488,22 +456,20 @@ class QrCode {
                         }
                     }
                 }
-            };
+            },
 
-            var createBytes = function(buffer, rsBlocks) {
+                createBytes = function(buffer, rsBlocks) {
 
-                var offset = 0;
-
-                var maxDcCount = 0;
-                var maxEcCount = 0;
-
-                var dcdata = new Array(rsBlocks.length);
-                var ecdata = new Array(rsBlocks.length);
+                var offset = 0,
+                    maxDcCount = 0,
+                    maxEcCount = 0,
+                    dcdata = new Array(rsBlocks.length),
+                    ecdata = new Array(rsBlocks.length);
 
                 for (var r = 0; r < rsBlocks.length; r += 1) {
 
-                    var dcCount = rsBlocks[r].dataCount;
-                    var ecCount = rsBlocks[r].totalCount - dcCount;
+                    var dcCount = rsBlocks[r].dataCount,
+                        ecCount = rsBlocks[r].totalCount - dcCount;
 
                     maxDcCount = Math.max(maxDcCount, dcCount);
                     maxEcCount = Math.max(maxEcCount, ecCount);
@@ -515,10 +481,10 @@ class QrCode {
                     }
                     offset += dcCount;
 
-                    var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
-                    var rawPoly = qrPolynomial(dcdata[r], rsPoly.getLength() - 1);
+                    var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount),
+                        rawPoly = qrPolynomial(dcdata[r], rsPoly.getLength() - 1),
+                        modPoly = rawPoly.mod(rsPoly);
 
-                    var modPoly = rawPoly.mod(rsPoly);
                     ecdata[r] = new Array(rsPoly.getLength() - 1);
                     for (var i = 0; i < ecdata[r].length; i += 1) {
                         var modIndex = i + modPoly.getLength() - ecdata[r].length;
@@ -553,13 +519,12 @@ class QrCode {
                 }
 
                 return data;
-            };
+            },
 
-            var createData = function(typeNumber, errorCorrectLevel, dataList) {
+                createData = function(typeNumber, errorCorrectLevel, dataList) {
 
-                var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectLevel);
-
-                var buffer = qrBitBuffer();
+                var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectLevel),
+                    buffer = qrBitBuffer();
 
                 for (var i = 0; i < dataList.length; i += 1) {
                     var data = dataList[i];
@@ -753,14 +718,14 @@ class QrCode {
                 [6, 32, 58, 84, 110, 136, 162],
                 [6, 26, 54, 82, 110, 138, 166],
                 [6, 30, 58, 86, 114, 142, 170]
-            ];
-            var G15 = (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0);
-            var G18 = (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0);
-            var G15_MASK = (1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1);
+            ],
+                G15 = (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0),
+                G18 = (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0),
+                G15_MASK = (1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1),
 
-            var _this = {};
+                _this = {},
 
-            var getBCHDigit = function(data) {
+                getBCHDigit = function(data) {
                 var digit = 0;
                 while (data != 0) {
                     digit += 1;
@@ -833,17 +798,16 @@ class QrCode {
 
             _this.getLostPoint = function(qrcode) {
 
-                var moduleCount = qrcode.getModuleCount();
-
-                var lostPoint = 0;
+                var moduleCount = qrcode.getModuleCount(),
+                    lostPoint = 0;
 
                 // LEVEL1
 
                 for (var row = 0; row < moduleCount; row += 1) {
                     for (var col = 0; col < moduleCount; col += 1) {
 
-                        var sameCount = 0;
-                        var dark = qrcode.isDark(row, col);
+                        var sameCount = 0,
+                            dark = qrcode.isDark(row, col);
 
                         for (var r = -1; r <= 1; r += 1) {
 
@@ -945,8 +909,8 @@ class QrCode {
 
         var QRMath = function() {
 
-            var EXP_TABLE = new Array(256);
-            var LOG_TABLE = new Array(256);
+            var EXP_TABLE = new Array(256),
+                LOG_TABLE = new Array(256);
 
             // initialize tables
             for (var i = 0; i < 8; i += 1) {
@@ -1347,15 +1311,14 @@ class QrCode {
                         '/errorCorrectLevel:' + errorCorrectLevel);
                 }
 
-                var length = rsBlock.length / 3;
-
-                var list = new Array();
+                var length = rsBlock.length / 3,
+                    list = new Array();
 
                 for (var i = 0; i < length; i += 1) {
 
-                    var count = rsBlock[i * 3 + 0];
-                    var totalCount = rsBlock[i * 3 + 1];
-                    var dataCount = rsBlock[i * 3 + 2];
+                    var count = rsBlock[i * 3 + 0],
+                        totalCount = rsBlock[i * 3 + 1],
+                        dataCount = rsBlock[i * 3 + 2];
 
                     for (var j = 0; j < count; j += 1) {
                         list.push(qrRSBlock(totalCount, dataCount));
@@ -1374,10 +1337,9 @@ class QrCode {
 
         var qrBitBuffer = function() {
 
-            var _buffer = new Array();
-            var _length = 0;
-
-            var _this = {};
+            var _buffer = new Array(),
+                _length = 0,
+                _this = {};
 
             _this.getBuffer = function() {
                 return _buffer;
@@ -1421,11 +1383,10 @@ class QrCode {
 
         var qr8BitByte = function(data) {
 
-            var _mode = QRMode.MODE_8BIT_BYTE;
-            var _data = data;
-            var _bytes = qrcode.stringToBytes(data);
-
-            var _this = {};
+            var _mode = QRMode.MODE_8BIT_BYTE,
+                _data = data,
+                _bytes = qrcode.stringToBytes(data),
+                _this = {};
 
             _this.getMode = function() {
                 return _mode;
