@@ -17,8 +17,13 @@ section {
   margin: 1.333rem 0;
 }
 
-#tools {
+#tools, #parameters {
   margin-top: 4rem;
+  width: 50%;
+  float: left;
+}
+
+#tools {
 }
 
 label {
