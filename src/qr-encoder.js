@@ -2,7 +2,7 @@
 let qrCodeGenerator = null;
 
 // Library interface
-class QrEncoder {
+export default class QrEncoder {
   static render(config, $element) {
     $element.appendChild(qrCodeGenerator(config));
   }
