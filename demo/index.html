@@ -39,9 +39,8 @@
   </main>
   <link rel="apple-touch-icon" href="pwa/icons/apple-touch-icon.png">
   <link rel="stylesheet" href="style.css">
-  <script src="../qr-encoder.min.js"></script>
-  <script>
-    'use strict';
+  <script type="module">
+    import QrEncoder from '../qr-encoder.min.js';
     let availableSettings = ['text', 'radius', 'ecLevel', 'fill', 'background', 'size'];
 
     function readSettings() {
