@@ -1,7 +1,8 @@
-<img align="right" src="demo/qr-code-example.png"/>
+# QR Encoder
 
-# Lightweight library for stylish QR codes
-A little library generating stylish QR codes in only 12.2kB minified (4.75kB gzipped).
+<img  src="demo/qr-code-example.png"/>
+
+A lightweight library generating stylish QR codes in only 12.2kB minified (4.75kB gzipped).
 Try out the [demo](https://nimiq.github.io/qr-encoder/demo)!
 
 ## Usage
