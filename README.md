@@ -6,7 +6,7 @@ A lightweight library generating stylish QR codes in only 12.2kB minified (4.75k
 Try out the [demo](https://nimiq.github.io/qr-encoder/demo)!
 
 ## Usage
-Call the QrCode API with a configuration object and a DOM element to render the QR code into:
+Call the QrCode API with a configuration object and a DOM element or canvas to render the QR code into:
 ```javascript
   QrEncoder.render({
     text: "some text",

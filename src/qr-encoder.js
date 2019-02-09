@@ -3,9 +3,9 @@ let qrCodeGenerator = null;
 
 // Library interface
 export default class QrEncoder {
-  static render(config, $element) {
-    $element.appendChild(qrCodeGenerator(config));
-  }
+    static render(config, $element) {
+        qrCodeGenerator(config, $element);
+    }
 }
 
 /*! jquery-qrcode v0.14.0 - https://larsjung.de/jquery-qrcode/ */
@@ -212,10 +212,20 @@ export default class QrEncoder {
 
     // // Register the plugin
     // // -------------------
-    qrCodeGenerator = function(options) {
+    qrCodeGenerator = function(options, $element) {
         var settings = {};
         Object.assign(settings, defaults, options);
-        return createCanvas(settings);
+        if ($element instanceof HTMLCanvasElement) {
+            if ($element.width !== settings.size || $element.height !== settings.size) {
+                $element.width = settings.size;
+                $element.height = settings.size;
+            }
+            $element.getContext('2d').clearRect(0, 0, $element.width, $element.height);
+            drawOnCanvas($element, settings);
+        } else {
+            const $canvas = createCanvas(settings);
+            $element.appendChild($canvas);
+        }
     };
 }(function() {
     // `qrcode` is the single public function defined by the `QR Code Generator`
