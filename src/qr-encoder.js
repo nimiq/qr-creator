@@ -115,7 +115,7 @@ self['QrEncoder'] = QrEncoder;
             rowB = row + 1,
             colL = col - 1,
             colR = col + 1,
-            radius = Math.floor(Math.max(0.5, settings.radius) * width),
+            radius = Math.floor(Math.min(0.5, Math.max(0, settings.radius)) * width),
             center = isDark(row, col),
             northwest = isDark(rowT, colL),
             north = isDark(rowT, col),
@@ -125,6 +125,11 @@ self['QrEncoder'] = QrEncoder;
             south = isDark(rowB, col),
             southwest = isDark(rowB, colL),
             west = isDark(row, colL);
+
+        left = Math.round(left);
+        top = Math.round(top);
+        right = Math.round(right);
+        bottom = Math.round(bottom);
 
         if (center) {
             drawModuleRoundedDark(context, left, top, right, bottom, radius, !north && !west, !north && !east, !south && !east, !south && !west);
