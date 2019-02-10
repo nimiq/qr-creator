@@ -155,8 +155,33 @@ self['QrEncoder'] = QrEncoder;
             }
         }
 
-        context.fillStyle = settings.fill;
+        setFill(context, settings);
         context.fill();
+    }
+
+    function setFill(context, settings) {
+        const fill = settings.fill;
+        if (typeof fill === 'string') {
+            // solid color
+            context.fillStyle = fill;
+            return;
+        }
+        const type = fill['type'],
+            position = fill['position'],
+            colorStops = fill['colorStops'];
+        let gradient;
+        const absolutePosition = position.map(coordinate => Math.round(coordinate * settings.size));
+        if (type === 'linear-gradient') {
+            gradient = context.createLinearGradient.apply(context, absolutePosition);
+        } else if (type === 'radial-gradient') {
+            gradient = context.createRadialGradient.apply(context, absolutePosition);
+        } else {
+            throw new Error('Unsupported fill');
+        }
+        colorStops.forEach(([offset, color]) => {
+            gradient.addColorStop(offset, color);
+        });
+        context.fillStyle = gradient;
     }
 
     // Draws QR code to the given `canvas` and returns it.
