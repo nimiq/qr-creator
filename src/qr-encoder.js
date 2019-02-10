@@ -7,6 +7,10 @@ export default class QrEncoder {
         qrCodeGenerator(config, $element);
     }
 }
+// avoid that closure compiler strips these away
+QrEncoder['render'] = QrEncoder.render;
+self['QrEncoder'] = QrEncoder;
+
 
 /*! jquery-qrcode v0.14.0 - https://larsjung.de/jquery-qrcode/ */
 (function(vendor_qrcode) {
@@ -180,33 +184,33 @@ export default class QrEncoder {
     // ----------------
     var defaults = {
         // version range somewhere in 1 .. 40
-        minVersion: 1,
-        maxVersion: 40,
+        'minVersion': 1,
+        'maxVersion': 40,
 
         // error correction level: `'L'`, `'M'`, `'Q'` or `'H'`
-        ecLevel: 'L',
+        'ecLevel': 'L',
 
         // offset in pixel if drawn onto existing canvas
-        left: 0,
-        top: 0,
+        'left': 0,
+        'top': 0,
 
         // size in pixel
-        size: 200,
+        'size': 200,
 
         // code color or image element
-        fill: '#000',
+        'fill': '#000',
 
         // background color, `null` for transparent background
-        background: null,
+        'background': null,
 
         // content
-        text: 'no text',
+        'text': 'no text',
 
         // corner radius relative to module width: 0.0 .. 0.5
-        radius: 0.5,
+        'radius': 0.5,
 
         // quiet zone in modules
-        quiet: 0,
+        'quiet': 0,
 
     };
 
@@ -215,6 +219,19 @@ export default class QrEncoder {
     qrCodeGenerator = function(options, $element) {
         var settings = {};
         Object.assign(settings, defaults, options);
+        // map real names to minifyable properties used by closure compiler
+        settings.minVersion = settings['minVersion'];
+        settings.maxVersion = settings['maxVersion'];
+        settings.ecLevel = settings['ecLevel'];
+        settings.left = settings['left'];
+        settings.top = settings['top'];
+        settings.size = settings['size'];
+        settings.fill = settings['fill'];
+        settings.background = settings['background'];
+        settings.text = settings['text'];
+        settings.radius = settings['radius'];
+        settings.quiet = settings['quiet'];
+
         if ($element instanceof HTMLCanvasElement) {
             if ($element.width !== settings.size || $element.height !== settings.size) {
                 $element.width = settings.size;
@@ -660,10 +677,10 @@ export default class QrEncoder {
         //---------------------------------------------------------------------
 
         var QRErrorCorrectLevel = {
-            L: 1,
-            M: 0,
-            Q: 3,
-            H: 2
+            'L': 1,
+            'M': 0,
+            'Q': 3,
+            'H': 2
         };
 
         //---------------------------------------------------------------------
@@ -1297,15 +1314,14 @@ export default class QrEncoder {
             var _this = {};
 
             var getRsBlockTable = function(typeNumber, errorCorrectLevel) {
-
                 switch (errorCorrectLevel) {
-                    case QRErrorCorrectLevel.L:
+                    case QRErrorCorrectLevel['L']:
                         return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
-                    case QRErrorCorrectLevel.M:
+                    case QRErrorCorrectLevel['M']:
                         return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
-                    case QRErrorCorrectLevel.Q:
+                    case QRErrorCorrectLevel['Q']:
                         return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
-                    case QRErrorCorrectLevel.H:
+                    case QRErrorCorrectLevel['H']:
                         return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
                     default:
                         return undefined;
