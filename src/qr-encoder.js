@@ -3,10 +3,14 @@ let qrCodeGenerator = null;
 
 // Library interface
 export default class QrEncoder {
-  static render(config, $element) {
-    $element.appendChild(qrCodeGenerator(config));
-  }
+    static render(config, $element) {
+        qrCodeGenerator(config, $element);
+    }
 }
+// avoid that closure compiler strips these away
+QrEncoder['render'] = QrEncoder.render;
+self['QrEncoder'] = QrEncoder;
+
 
 /*! jquery-qrcode v0.14.0 - https://larsjung.de/jquery-qrcode/ */
 (function(vendor_qrcode) {
@@ -111,7 +115,7 @@ export default class QrEncoder {
             rowB = row + 1,
             colL = col - 1,
             colR = col + 1,
-            radius = Math.floor(Math.max(0.5, settings.radius) * width),
+            radius = Math.floor(Math.min(0.5, Math.max(0, settings.radius)) * width),
             center = isDark(row, col),
             northwest = isDark(rowT, colL),
             north = isDark(rowT, col),
@@ -121,6 +125,11 @@ export default class QrEncoder {
             south = isDark(rowB, col),
             southwest = isDark(rowB, colL),
             west = isDark(row, colL);
+
+        left = Math.round(left);
+        top = Math.round(top);
+        right = Math.round(right);
+        bottom = Math.round(bottom);
 
         if (center) {
             drawModuleRoundedDark(context, left, top, right, bottom, radius, !north && !west, !north && !east, !south && !east, !south && !west);
@@ -146,8 +155,33 @@ export default class QrEncoder {
             }
         }
 
-        context.fillStyle = settings.fill;
+        setFill(context, settings);
         context.fill();
+    }
+
+    function setFill(context, settings) {
+        const fill = settings.fill;
+        if (typeof fill === 'string') {
+            // solid color
+            context.fillStyle = fill;
+            return;
+        }
+        const type = fill['type'],
+            position = fill['position'],
+            colorStops = fill['colorStops'];
+        let gradient;
+        const absolutePosition = position.map(coordinate => Math.round(coordinate * settings.size));
+        if (type === 'linear-gradient') {
+            gradient = context.createLinearGradient.apply(context, absolutePosition);
+        } else if (type === 'radial-gradient') {
+            gradient = context.createRadialGradient.apply(context, absolutePosition);
+        } else {
+            throw new Error('Unsupported fill');
+        }
+        colorStops.forEach(([offset, color]) => {
+            gradient.addColorStop(offset, color);
+        });
+        context.fillStyle = gradient;
     }
 
     // Draws QR code to the given `canvas` and returns it.
@@ -180,42 +214,65 @@ export default class QrEncoder {
     // ----------------
     var defaults = {
         // version range somewhere in 1 .. 40
-        minVersion: 1,
-        maxVersion: 40,
+        'minVersion': 1,
+        'maxVersion': 40,
 
         // error correction level: `'L'`, `'M'`, `'Q'` or `'H'`
-        ecLevel: 'L',
+        'ecLevel': 'L',
 
         // offset in pixel if drawn onto existing canvas
-        left: 0,
-        top: 0,
+        'left': 0,
+        'top': 0,
 
         // size in pixel
-        size: 200,
+        'size': 200,
 
         // code color or image element
-        fill: '#000',
+        'fill': '#000',
 
         // background color, `null` for transparent background
-        background: null,
+        'background': null,
 
         // content
-        text: 'no text',
+        'text': 'no text',
 
         // corner radius relative to module width: 0.0 .. 0.5
-        radius: 0.5,
+        'radius': 0.5,
 
         // quiet zone in modules
-        quiet: 0,
+        'quiet': 0,
 
     };
 
     // // Register the plugin
     // // -------------------
-    qrCodeGenerator = function(options) {
+    qrCodeGenerator = function(options, $element) {
         var settings = {};
         Object.assign(settings, defaults, options);
-        return createCanvas(settings);
+        // map real names to minifyable properties used by closure compiler
+        settings.minVersion = settings['minVersion'];
+        settings.maxVersion = settings['maxVersion'];
+        settings.ecLevel = settings['ecLevel'];
+        settings.left = settings['left'];
+        settings.top = settings['top'];
+        settings.size = settings['size'];
+        settings.fill = settings['fill'];
+        settings.background = settings['background'];
+        settings.text = settings['text'];
+        settings.radius = settings['radius'];
+        settings.quiet = settings['quiet'];
+
+        if ($element instanceof HTMLCanvasElement) {
+            if ($element.width !== settings.size || $element.height !== settings.size) {
+                $element.width = settings.size;
+                $element.height = settings.size;
+            }
+            $element.getContext('2d').clearRect(0, 0, $element.width, $element.height);
+            drawOnCanvas($element, settings);
+        } else {
+            const $canvas = createCanvas(settings);
+            $element.appendChild($canvas);
+        }
     };
 }(function() {
     // `qrcode` is the single public function defined by the `QR Code Generator`
@@ -650,10 +707,10 @@ export default class QrEncoder {
         //---------------------------------------------------------------------
 
         var QRErrorCorrectLevel = {
-            L: 1,
-            M: 0,
-            Q: 3,
-            H: 2
+            'L': 1,
+            'M': 0,
+            'Q': 3,
+            'H': 2
         };
 
         //---------------------------------------------------------------------
@@ -1287,15 +1344,14 @@ export default class QrEncoder {
             var _this = {};
 
             var getRsBlockTable = function(typeNumber, errorCorrectLevel) {
-
                 switch (errorCorrectLevel) {
-                    case QRErrorCorrectLevel.L:
+                    case QRErrorCorrectLevel['L']:
                         return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
-                    case QRErrorCorrectLevel.M:
+                    case QRErrorCorrectLevel['M']:
                         return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
-                    case QRErrorCorrectLevel.Q:
+                    case QRErrorCorrectLevel['Q']:
                         return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
-                    case QRErrorCorrectLevel.H:
+                    case QRErrorCorrectLevel['H']:
                         return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
                     default:
                         return undefined;

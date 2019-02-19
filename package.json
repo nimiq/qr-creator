@@ -1,0 +1,21 @@
+{
+  "name": "@nimiq/qr-encoder",
+  "version": "0.1.0",
+  "description": "Qr code generator for codes with rounded corners",
+  "repository": "git@github.com:nimiq/qr-encoder.git",
+  "author": "Nimiq (www.nimiq.com)",
+  "license": "MIT",
+
+  "browser": "qr-encoder.min.js",
+  "module": "qr-encoder.min.js",
+  "types": "types/qr-encoder.d.ts",
+  "files": ["src/qr-encoder.js", "qr-encoder.min.js", "qr-encoder.min.js.map", "types/qr-encoder.d.ts"],
+
+  "scripts": {
+    "build": "google-closure-compiler --js=src/qr-encoder.js --js_output_file=qr-encoder.min.js --language_in=ECMASCRIPT6 --language_out=ECMASCRIPT6 --rewrite_polyfills=false --compilation_level=ADVANCED --create_source_map=qr-encoder.min.js.map && echo -e 'export default QrEncoder;\n//# sourceMappingURL=qr-encoder.min.js.map' >> qr-encoder.min.js"
+  },
+
+  "devDependencies": {
+    "google-closure-compiler": "^20190121.0.0"
+  }
+}
