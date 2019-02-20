@@ -20,7 +20,7 @@
     </section>
     <section id="tools">
       <label>Text: <input id="text" type="text" value="Hello world of QR codes!"></label>
-      <label>Radius: <input id="radius" type="range" value="0.5" step="0.025" min="0" max="2.5"></label>
+      <label>Radius: <input id="radius" type="range" value="0.5" step="0.025" min="0" max="0.5"></label>
       <label>Error correction:
       <select id="ecLevel">
         <option value="L" label="Low, 7%">
@@ -40,7 +40,7 @@
   <link rel="apple-touch-icon" href="pwa/icons/apple-touch-icon.png">
   <link rel="stylesheet" href="style.css">
   <script type="module">
-    import QrEncoder from '../qr-encoder.min.js';
+    import QrCode from '../qr-code.min.js';
     let availableSettings = ['text', 'radius', 'ecLevel', 'fill', 'background', 'size'];
 
     function readSettings() {
@@ -59,7 +59,7 @@
           container = document.querySelector('#qr-code'),
           settings = readSettings();
       container.innerHTML = '';
-      QrEncoder.render(settings, container);
+      QrCode.render(settings, container);
       document.querySelector('#stats').innerText = 'Rendered in ' + (new Date()-time) + 'ms';
       document.querySelector('#json').innerText = JSON.stringify(settings, null, 2);
     }

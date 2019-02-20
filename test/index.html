@@ -22,7 +22,7 @@
   </main>
   <link rel="apple-touch-icon" href="pwa/icons/apple-touch-icon.png">
   <link rel="stylesheet" href="style.css">
-  <script src="../src/qr-encoder.js"></script>
+  <script src="../src/qr-code.js"></script>
   <script src="qr-code.org.js"></script>
   <script>
     'use strict';
@@ -42,7 +42,7 @@
     function test(config, selector) {
       let testReference = Object.assign({}, config, { fill: '#996633' })
       QrCodeOrg.render(testReference, document.querySelector(selector));
-      QrEncoder.render(config, document.querySelector(selector));
+      QrCode.render(config, document.querySelector(selector));
     }
   </script>
 </body>

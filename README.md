@@ -1,14 +1,29 @@
-# QR Encoder
+# QR Code Encoder
 
-<img  src="demo/qr-code-example.png"/>
+<img src="https://nimiq.github.io/qr-encoder/demo/qr-code-example.png"/>
 
-A lightweight library generating stylish QR codes in only 12.2kB minified (4.75kB gzipped).
+A lightweight library generating stylish QR codes that also support gradient fills and rounded corners in only 12.2kB minified (4.75kB gzipped).
 Try out the [demo](https://nimiq.github.io/qr-encoder/demo)!
+
+## Origin
+This library is a trimmed down version of [Lars Jung's jQuery.qrcode library](https://larsjung.de/jquery-qrcode/). Lars Jung's library makes use of this [QR code Generator](https://github.com/kazuhikoarase/qrcode-generator). All parts are licensed under the MIT License.
+
+## Installation
+
+To install via npm:
+```bash
+npm install --save qr-code
+```
+To install via yarn:
+```bash
+yarn add qr-code
+```
+Or simply copy `qr-code.min.js` over to your project.
 
 ## Usage
 Call the QrCode API with a configuration object and a DOM element or canvas to render the QR code into:
 ```javascript
-  QrEncoder.render({
+  QrCode.render({
     text: "some text",
     radius: 0.5, // 0.0 to 0.5
     ecLevel: 'H', // L, M, Q, H
@@ -40,9 +55,6 @@ If you want to fill the QR code with a gradient, use the following format:
 }
 ```
 Where the position is specified as in [createLinearGradient](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createLinearGradient) / [createRadialGradient](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/createRadialGradient). However, each value is relative to the QR code size, i.e. will be multiplied by that size to yield the absolute position.
-
-## Origin
-This library is a trimmed down version of [Lars Jung's jQuery.qrcode library](https://larsjung.de/jquery-qrcode/). Lars Jung's library makes use of this [QR code Generator](https://github.com/kazuhikoarase/qrcode-generator). All parts are licensed under the MIT License.
 
 ## Trimmed down to be low weight
 The goal of the library is to generate QR codes only. For that reason we have removed all additional code such as GIF image generation, background image support, rendering a label on top, removed some dead code, and freed it from depending on jQuery. Also, the resulting library does not use any global variables, is all strict mode, and relies on modern browser standards instead.
