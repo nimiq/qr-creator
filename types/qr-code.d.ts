@@ -3,7 +3,7 @@
 // Definitions by: Nimiq <www.nimiq.com>
 
 declare class QrCode {
-    public static render(config: QrCode.Config, $element: HTMLElement);
+    public static render(config: QrCode.Config, $element: HTMLElement): void;
 }
 
 // exported types
