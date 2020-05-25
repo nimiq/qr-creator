@@ -2,14 +2,14 @@
 let qrCodeGenerator = null;
 
 // Library interface
-export default class QrCode {
+export default class QrCreator {
     static render(config, $element) {
         qrCodeGenerator(config, $element);
     }
 }
 // avoid that closure compiler strips these away
-QrCode['render'] = QrCode.render;
-self['QrCode'] = QrCode;
+QrCreator['render'] = QrCreator.render;
+self['QrCreator'] = QrCreator;
 
 
 /*! jquery-qrcode v0.14.0 - https://larsjung.de/jquery-qrcode/ */

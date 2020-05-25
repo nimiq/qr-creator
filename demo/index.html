@@ -3,13 +3,13 @@
 
 <head>
     <meta charset="utf-8">
-    <title>QR code generator demo</title>
+    <title>QR code creator demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 </head>
 
 <body class="state-loading">
   <header>
-    <h1>QR code generator demo</h1>
+    <h1>QR code creator demo</h1>
   </header>
   <main>
     <section>
@@ -33,14 +33,13 @@
       <label>Size: <input id="size" type="range" value="250" step="10" min="20" max="1000"></label>
     </section>
     <section id="parameters">
-      <label>Parameters:
+      <label>Parameters:</label>
       <pre id="json"></pre>
     </section>
   </main>
-  <link rel="apple-touch-icon" href="pwa/icons/apple-touch-icon.png">
   <link rel="stylesheet" href="style.css">
   <script type="module">
-    import QrCode from '../qr-code.min.js';
+    import QrCreator from '../qr-creator.min.js';
     let availableSettings = ['text', 'radius', 'ecLevel', 'fill', 'background', 'size'];
 
     function readSettings() {
@@ -59,7 +58,7 @@
           container = document.querySelector('#qr-code'),
           settings = readSettings();
       container.innerHTML = '';
-      QrCode.render(settings, container);
+      QrCreator.render(settings, container);
       document.querySelector('#stats').innerText = 'Rendered in ' + (new Date()-time) + 'ms';
       document.querySelector('#json').innerText = JSON.stringify(settings, null, 2);
     }

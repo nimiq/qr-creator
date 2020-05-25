@@ -1,30 +1,34 @@
 # QR Code Encoder
 
-<img src="https://nimiq.github.io/qr-encoder/demo/qr-code-example.png"/>
+<img src="https://nimiq.github.io/qr-creator/demo/qr-code-example.png"/>
 
 A lightweight library generating stylish QR codes that also support gradient fills and rounded corners in only 12.2kB minified (4.75kB gzipped).
-Try out the [demo](https://nimiq.github.io/qr-encoder/demo)!
+Try out the [demo](https://nimiq.github.io/qr-creator/demo)!
 
 ## Origin
-This library is a trimmed down version of [Lars Jung's jQuery.qrcode library](https://larsjung.de/jquery-qrcode/). Lars Jung's library makes use of this [QR code Generator](https://github.com/kazuhikoarase/qrcode-generator). All parts are licensed under the MIT License.
+This library is a trimmed down version of [Lars Jung's jQuery.qrcode library](https://larsjung.de/jquery-qrcode/). Our library is however not based on jQuery anymore and doesnt make use of it. Lars Jung's library itself is based on this [QR code Generator](https://github.com/kazuhikoarase/qrcode-generator).
+
+All parts are licensed under the MIT License.
 
 ## Installation
 
 To install via npm:
 ```bash
-npm install --save qr-code
+npm install --save qr-creator
 ```
 To install via yarn:
 ```bash
-yarn add qr-code
+yarn add qr-creator
 ```
-Or simply copy `qr-code.min.js` over to your project.
+Or simply copy `qr-creator.min.js` over to your project.
 
 ## Usage
-Call the QrCode API with a configuration object and a DOM element or canvas to render the QR code into:
+Call the QrCreator API with a configuration object and a DOM element or canvas to render the QR code into:
 ```javascript
-  QrCode.render({
-    text: "some text",
+  import QrCreator from 'qr-creator';
+
+  QrCreator.render({
+    text: 'some text',
     radius: 0.5, // 0.0 to 0.5
     ecLevel: 'H', // L, M, Q, H
     fill: '#536DFE', // foreground color
