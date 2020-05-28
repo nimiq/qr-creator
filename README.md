@@ -20,13 +20,28 @@ To install via yarn:
 ```bash
 yarn add qr-creator
 ```
-Or simply copy `qr-creator.min.js` over to your project.
+Or use a cdn like [jsdelivr](http://www.jsdelivr.com/package/npm/qr-creator) or
+[unpkg](https://unpkg.com/browse/qr-creator@1.0.0/) (see [usage](#usage)).
 
 ## Usage
+The library is available as a module and non-module version.
+To import it as a module:
+```javascript
+  // from installed package for bundling with a module bundler like webpack:
+  import QrCreator from 'qr-creator';
+  // from cdn:
+  import QrCreator from 'https://cdn.jsdelivr.net/npm/qr-creator/dist/qr-creator.es6.min.js';
+```
+To use the non-module version:
+```html
+  <!-- from your project's code base -->
+  <script src="path/to/qr-creator.min.js"></script>
+  <!-- from cdn -->
+  <script src="https://cdn.jsdelivr.net/npm/qr-creator/dist/qr-creator.min.js"></script>
+```
+
 Call the QrCreator API with a configuration object and a DOM element or canvas to render the QR code into:
 ```javascript
-  import QrCreator from 'qr-creator';
-
   QrCreator.render({
     text: 'some text',
     radius: 0.5, // 0.0 to 0.5
