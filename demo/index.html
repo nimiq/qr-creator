@@ -19,7 +19,9 @@
     <section id="stats">
     </section>
     <section id="tools">
-      <label>Text: <input id="text" type="text" value="Hello world of QR codes!"></label>
+      <label>Text: <input id="text" type="text" value="http://github.com/airconsole/ablaa"></label>
+      <label>Image: <input id="image" type="text" value="../nimiq_logo_rgb_horizontal.svg"></label>
+      <label>Image Size: <input id="imageEcCover" type="range" value="0.3" step="0.1" min="0" max="0.8"></label>
       <label>Radius: <input id="radius" type="range" value="0.5" step="0.025" min="0" max="0.5"></label>
       <label>Error correction:
       <select id="ecLevel">
@@ -28,9 +30,12 @@
         <option value="Q" label="Quarter, 25%">
         <option value="H" label="High, 30%" selected>
       </select></label>
-      <label>Color: <input id="fill" type="color" value="#0064a8"></label>
-      <label>Background: <input id="background" type="color"><input id="transparent" type="checkbox" checked> transparent</label>
+      <label>Color: <input id="fill" type="color" value="#2669A6"></label>
+      <label>Corner Color: <input id="cornerFill" type="color" value="#22435e"></label>
+      <label><input id="cornerFillSame" type="checkbox"> same as color</label>
+      <label>Background: <input id="background" type="color" value="#ffffff"><input id="transparent" type="checkbox"> transparent</label>
       <label>Size: <input id="size" type="range" value="250" step="10" min="20" max="1000"></label>
+      <label><input id="quiet" type="checkbox" checked value="1"> Border</label>
     </section>
     <section id="parameters">
       <label>Parameters:</label>
@@ -39,8 +44,8 @@
   </main>
   <link rel="stylesheet" href="style.css">
   <script type="module">
-    import QrCreator from 'https://cdn.jsdelivr.net/npm/qr-creator/dist/qr-creator.es6.min.js';
-    let availableSettings = ['text', 'radius', 'ecLevel', 'fill', 'background', 'size'];
+    import QrCreator from '../src/qr-creator.js';
+    let availableSettings = ['text', 'radius', 'ecLevel', 'fill', 'cornerFill', 'background', 'size', 'image', 'imageEcCover'];
 
     function readSettings() {
       let settings = {}, el;
@@ -48,7 +53,17 @@
         settings[setting] = document.querySelector('#'+setting).value;
       }
       if (document.querySelector('#transparent').checked) {
-        settings.background = null;
+        delete settings.background;
+      }
+      if (document.querySelector('#quiet').checked) {
+        settings.quiet = 1;
+      }
+      if (document.querySelector('#cornerFillSame').checked) {
+        delete settings.cornerFill;
+      }
+      if (!settings.image) {
+        delete settings.image;
+        delete settings.imageEcCover;
       }
       return settings;
     }
@@ -58,9 +73,10 @@
           container = document.querySelector('#qr-code'),
           settings = readSettings();
       container.innerHTML = '';
-      QrCreator.render(settings, container);
-      document.querySelector('#stats').innerText = 'Rendered in ' + (new Date()-time) + 'ms';
-      document.querySelector('#json').innerText = JSON.stringify(settings, null, 2);
+      QrCreator.render(settings, container, function() {
+        document.querySelector('#stats').innerText = 'Rendered in ' + (new Date()-time) + 'ms';
+        document.querySelector('#json').innerText = JSON.stringify(settings, null, 2);
+      });
     }
 
     for (let input of document.querySelectorAll('input, select')) {
