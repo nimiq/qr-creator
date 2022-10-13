@@ -3,7 +3,7 @@
 <img src="demo/qr-code-example.png"/>
 
 A lightweight library generating stylish QR codes that also support gradient fills, rounded corners, logos and different colors for the corner modules in only 12.8kB minified (5.39kB gzipped).
-Try out the [demo](https://airconole.github.io/qr-creator-logo/demo)!
+Try out the [demo](https://airconsole.github.io/qr-creator-logo/demo)!
 
 ## Origin
 This library is an extended version of [Nimiq's qr-creator library](https://github.com/nimiq/qr-creator), which is a trimmed down version of [Lars Jung's jQuery.qrcode library](https://larsjung.de/jquery-qrcode/). Our library is however not based on jQuery anymore and doesnt make use of it. Lars Jung's library itself is based on this [QR code Generator](https://github.com/kazuhikoarase/qrcode-generator).
