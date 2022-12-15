@@ -9,8 +9,7 @@ export default class QrCreator {
 }
 // avoid that closure compiler strips these away
 QrCreator['render'] = QrCreator.render;
-self['QrCreator'] = QrCreator;
-
+globalThis['QrCreator'] = QrCreator;
 
 /*! jquery-qrcode v0.14.0 - https://larsjung.de/jquery-qrcode/ */
 (function(vendor_qrcode) {
