@@ -18,6 +18,12 @@ pipeline {
             }
         }
 
+        stage('Run Build') {
+            steps {
+                sh 'npm run build'
+            }
+        }
+
         stage('Publish to GitHub Packages') {
             steps {
                 script {

@@ -1,6 +1,6 @@
 {
   "name": "@airconsole/qr-creator-logo",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Lightweight QR code generator for stylish QR codes",
   "keywords": ["qr", "qr code", "qr creator", "qr encoder", "stylish qr", "beautiful qr", "lightweight", "small"],
   "repository": "git@github.com:AirConsole/qr-creator-logo.git",
