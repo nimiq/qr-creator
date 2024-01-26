@@ -11,6 +11,8 @@ html {
 body {
   max-width: 720px;
   margin: 0 auto;
+  background-color: #3b3b3b;
+  color: white;
 }
 
 section {
